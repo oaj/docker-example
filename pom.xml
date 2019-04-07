@@ -10,15 +10,15 @@
 	</parent>
 	<groupId>dk.amfibia</groupId>
 	<artifactId>docker-example</artifactId>
-	<version>0.1.0</version>
+	<version>0.1.1</version>
 	<name>docker-example</name>
 	<description>Demo project for Spring Boot</description>
 
 	<properties>
 		<java.version>1.8</java.version>
-		<docker.image.prefix>amfibia</docker.image.prefix>
-		<project.build.finalName>${artifactId}-${version}</project.build.finalName>
-		<dockerfile-maven-version>1.4.9</dockerfile-maven-version>
+		<docker.image.prefix>oajamfibia</docker.image.prefix>
+		<project.build.finalName>${project.artifactId}-${project.version}</project.build.finalName>
+		<dockerfile-maven-version>1.4.10</dockerfile-maven-version>
 	</properties>
 
 	<dependencies>
@@ -39,27 +39,6 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>com.spotify</groupId>
-				<artifactId>dockerfile-maven-plugin</artifactId>
-				<version>${dockerfile-maven-version}</version>
-				<!--<executions>-->
-					<!--<execution>-->
-						<!--<id>default</id>-->
-						<!--<goals>-->
-							<!--<goal>build</goal>-->
-							<!--<goal>push</goal>-->
-						<!--</goals>-->
-					<!--</execution>-->
-				<!--</executions>-->
-				<configuration>
-					<repository>oajamfibia/docker-example</repository>
-					<tag>${project.version}</tag>
-					<buildArgs>
-						<JAR_FILE>${project.build.finalName}.jar</JAR_FILE>
-					</buildArgs>
-				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -83,7 +62,35 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>com.spotify</groupId>
+				<artifactId>dockerfile-maven-plugin</artifactId>
+				<version>${dockerfile-maven-version}</version>
+				<executions>
+					<execution>
+						<id>default</id>
+						<goals>
+							<goal>build</goal>
+							<goal>push</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<repository>oajamfibia/docker-example</repository>
+					<tag>${project.version}</tag>
+					<useMavenSettingsForAuth>true</useMavenSettingsForAuth>
+					<buildArgs>
+						<JAR_FILE>${project.build.finalName}.jar</JAR_FILE>
+					</buildArgs>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
-
+	<distributionManagement>
+		<repository>
+			<id>internal.repo</id>
+			<name>Internal repo</name>
+			<url>file:///home/amfibia/maven_distributions/${project.artifactId}/in</url>
+		</repository>
+	</distributionManagement>
 </project>
